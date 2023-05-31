@@ -360,7 +360,7 @@ namespace Bingo2
 
             for (int i = 0; i < Global.fastSelectTimes; i++)                                                                                    // 早く選んでいる風の処理
             {
-                int rand = random.Next(0, Global.cnt);
+                int rand = random.Next(array.Length);
                 num.Text = array[rand].ToString();                                                                                              // 数字表示
                 await Task.Delay(Global.fastSelectTime);                                                                                        // 待機処理
             }
@@ -426,7 +426,7 @@ namespace Bingo2
         private void settingsClosed(object sender, EventArgs e)                                                                                 // サブフォーム終了時
         {
             btn.Enabled = true;
-            btn.Text = Global.msg[1]; 
+            btn.Text = Global.msg[1];
         }
 
         /// <summary>
