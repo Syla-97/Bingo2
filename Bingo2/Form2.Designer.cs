@@ -28,67 +28,66 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainTable = new System.Windows.Forms.TableLayoutPanel();
-            this.btn2 = new System.Windows.Forms.Button();
-            this.btn1 = new System.Windows.Forms.Button();
-            this.mainTable.SuspendLayout();
-            this.SuspendLayout();
+            mainTable = new TableLayoutPanel();
+            btn2 = new Button();
+            btn1 = new Button();
+            mainTable.SuspendLayout();
+            SuspendLayout();
             // 
             // mainTable
             // 
-            this.mainTable.ColumnCount = 1;
-            this.mainTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.mainTable.Controls.Add(this.btn2, 0, 1);
-            this.mainTable.Controls.Add(this.btn1, 0, 0);
-            this.mainTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainTable.Location = new System.Drawing.Point(0, 0);
-            this.mainTable.Margin = new System.Windows.Forms.Padding(0);
-            this.mainTable.Name = "mainTable";
-            this.mainTable.RowCount = 2;
-            this.mainTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainTable.Size = new System.Drawing.Size(224, 121);
-            this.mainTable.TabIndex = 0;
+            mainTable.ColumnCount = 1;
+            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            mainTable.Controls.Add(btn2, 0, 1);
+            mainTable.Controls.Add(btn1, 0, 0);
+            mainTable.Dock = DockStyle.Fill;
+            mainTable.Location = new Point(0, 0);
+            mainTable.Margin = new Padding(0);
+            mainTable.Name = "mainTable";
+            mainTable.RowCount = 2;
+            mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            mainTable.Size = new Size(224, 121);
+            mainTable.TabIndex = 0;
             // 
             // btn2
             // 
-            this.btn2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn2.Font = new System.Drawing.Font("メイリオ", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn2.Location = new System.Drawing.Point(0, 60);
-            this.btn2.Margin = new System.Windows.Forms.Padding(0);
-            this.btn2.Name = "btn2";
-            this.btn2.Size = new System.Drawing.Size(224, 61);
-            this.btn2.TabIndex = 1;
-            this.btn2.Text = "Continue";
-            this.btn2.UseVisualStyleBackColor = true;
-            this.btn2.Click += new System.EventHandler(this.btn2_Click);
+            btn2.Dock = DockStyle.Fill;
+            btn2.Font = new Font("メイリオ", 27.75F, FontStyle.Regular, GraphicsUnit.Point);
+            btn2.Location = new Point(0, 60);
+            btn2.Margin = new Padding(0);
+            btn2.Name = "btn2";
+            btn2.Size = new Size(224, 61);
+            btn2.TabIndex = 1;
+            btn2.Text = "Continue";
+            btn2.UseVisualStyleBackColor = true;
+            btn2.Click += btn2_Click;
             // 
             // btn1
             // 
-            this.btn1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn1.Font = new System.Drawing.Font("メイリオ", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn1.Location = new System.Drawing.Point(0, 0);
-            this.btn1.Margin = new System.Windows.Forms.Padding(0);
-            this.btn1.Name = "btn1";
-            this.btn1.Size = new System.Drawing.Size(224, 60);
-            this.btn1.TabIndex = 0;
-            this.btn1.Text = "New";
-            this.btn1.UseVisualStyleBackColor = true;
-            this.btn1.Click += new System.EventHandler(this.btn1_Click);
+            btn1.Dock = DockStyle.Fill;
+            btn1.Font = new Font("メイリオ", 27.75F, FontStyle.Regular, GraphicsUnit.Point);
+            btn1.Location = new Point(0, 0);
+            btn1.Margin = new Padding(0);
+            btn1.Name = "btn1";
+            btn1.Size = new Size(224, 60);
+            btn1.TabIndex = 0;
+            btn1.Text = "New";
+            btn1.UseVisualStyleBackColor = true;
+            btn1.Click += btn1_Click;
             // 
             // sub
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(224, 121);
-            this.Controls.Add(this.mainTable);
-            this.Name = "sub";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Settings";
-            this.mainTable.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(224, 121);
+            Controls.Add(mainTable);
+            Name = "sub";
+            StartPosition = FormStartPosition.Manual;
+            Text = "Settings";
+            mainTable.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

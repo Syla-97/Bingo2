@@ -1511,6 +1511,7 @@
             Controls.Add(mainTable);
             Name = "root";
             Text = "Let's Bingo!";
+            Load += root_Load;
             mainTable.ResumeLayout(false);
             mainTable.PerformLayout();
             ResumeLayout(false);

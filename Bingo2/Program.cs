@@ -8,7 +8,7 @@ namespace Bingo2
         internal static class Global
         {
             internal static readonly string exeDirPath = Path.GetDirectoryName(Application.ExecutablePath)!;                          // 実行したときの自身のフォルダパスを取得
-            internal static string saveDataPath = "";
+            internal static string saveDataPath = exeDirPath + "\\data.txt";
             internal static int code = -1;
         }
         /// <summary>

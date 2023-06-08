@@ -1,5 +1,3 @@
-using System;
-
 namespace Bingo2
 {
     public partial class root : Form
@@ -9,8 +7,8 @@ namespace Bingo2
         /// </summary>
         internal static class Global
         {
-            internal static List<int> Numbers = new List<int>(Enumerable.Range(1, 75));                                                         // 選対象の数字の配列
-            internal static int cnt = Numbers.Count;                                                                                            // Numbersのリストの要素数(LengthはArray用)
+            internal static List<int> Numbers = new(Enumerable.Range(1, 75));                                                                   // 選対象の数字の配列
+            //internal static int cnt = Numbers.Count;                                                                                          // Numbersのリストの要素数(LengthはArray用)
             internal static int[] num_previous = new int[5] { 0, 0, 0, 0, 0 };                                                                  // 履歴を出すための配列
             internal static int select = 0;                                                                                                     // 選んだ番号
             internal const int fastSelectTimes = 39;                                                                                            // 早く選んでる風の時の繰り返し回数
@@ -20,18 +18,22 @@ namespace Bingo2
             internal const int finalSelectTime = 500;                                                                                           // 数字が決定するまでの時の間隔(ミリ秒単位)
             internal const int colorChangeTime = 500;                                                                                           // 決定後の背景色が変わる時の間隔(ミリ秒単位)
             internal const int colorChangeTimes = 3;                                                                                            // 決定後のエフェクトの繰り返し回数
-            internal readonly static List<string> rgb = new List<string> { "#E55381", "#5DA9E9", "#F4D53E", "#17B890", "#FFFFFF" };             // B, I, N, G, O 列の色(HTMLカラーコード)
-            internal readonly static List<string> brgyCode = new List<string> { "#000000", "#FF0000", "#00FF00", "#FFFF00" };                   // Black, Red, Green, Yellow(HTMLカラーコード)
+            internal readonly static List<string> rgb = new() { "#E55381", "#5DA9E9", "#F4D53E", "#17B890", "#FFFFFF" };                        // B, I, N, G, O 列の色(HTMLカラーコード)
+            internal readonly static List<string> brgyCode = new() { "#000000", "#FF0000", "#00FF00", "#FFFF00" };                              // Black, Red, Green, Yellow(HTMLカラーコード)
             internal static bool rollExists = false;                                                                                            // ロール音のファイルのフラグ
             internal readonly static string rollFilepath = Program.Global.exeDirPath + "\\drumroll.wav";                                        // ロール音のファイルパス
             internal static bool hitExists = false;                                                                                             // ヒット音のファイルのフラグ
             internal readonly static string hitFilepath = Program.Global.exeDirPath + "\\drumhit.wav";                                          // ヒット音のファイルパス
-            internal static List<string> msg = new List<string> { "Initialize", "S T A R T !", "N E X T >>", " H I S T O R Y", "E R R O R" };   // 表示テキスト一覧
+            internal static List<string> msg = new() { "Initialize", "S T A R T !", "N E X T >>", " H I S T O R Y", "E R R O R" };              // 表示テキスト一覧
+            internal static List<string> saveData = new();
         }
 
         private System.Media.SoundPlayer drumRoll, drumHit;                                                                                     // SoundPlayerオブジェクトの使用
 
-
+        /// <summary>
+        /// Table color changer
+        /// </summary>
+        /// <param name="target"></param>
         private void colorChanger(int target)
         {
             switch (target)
@@ -348,6 +350,29 @@ namespace Bingo2
             }
         }
 
+        /// <summary>
+        /// Save history
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="select"></param>
+        private void saveData(string path, int select)
+        {
+            StreamWriter sw = new(path, true, System.Text.Encoding.UTF8);
+            sw.WriteLine(select.ToString());
+            sw.Close();
+        }
+
+        /// <summary>
+        /// Previous changer
+        /// </summary>
+        /// <param name="select"></param>
+        private void previousChange(int select)
+        {
+            for (int i = 4; i > 0; i--)
+                Global.num_previous[i] = Global.num_previous[i - 1];
+            Global.num_previous[0] = select;
+        }
+
 
         /// <summary>
         /// Bingo Number Select Effect
@@ -367,12 +392,12 @@ namespace Bingo2
 
             for (int i = 0; i < Global.slowSelectTimes; i++)                                                                                    // 遅く選んでいる風の処理
             {
-                int rand = random.Next(0, Global.cnt);
+                int rand = random.Next(0, Global.Numbers.Count);
                 num.Text = array[rand].ToString();
                 await Task.Delay(Global.slowSelectTime);
             }
 
-            sel = array[random.Next(0, Global.cnt)];                                                                                            // 番号の決定
+            sel = array[random.Next(0, Global.Numbers.Count)];                                                                                  // 番号の決定
             await Task.Delay(Global.finalSelectTime);
 
             if (Global.rollExists == true)
@@ -407,27 +432,114 @@ namespace Bingo2
 
             num.BackColor = SystemColors.Control;                                                                                               // アナウンス終了(背景色を初期値へ)
 
-            Global.select = sel;                                                                                                                // Globalへ値をコピー
             Global.Numbers.Remove(sel);                                                                                                         // 選んだ番号に対応する要素を削除
-            Global.cnt--;                                                                                                                       // リストの長さを短くする
 
-            for (int i = 4; i > 0; i--)
-                Global.num_previous[i] = Global.num_previous[i - 1];                                                                            // 履歴の更新処理
+            previousChange(sel);                                                                                                                // 履歴の更新処理
+
+            saveData(Program.Global.saveDataPath, sel);
 
             btn.Enabled = true;                                                                                                                 // Nextボタンを有効化
         }
 
+        /// <summary>
+        /// Load save data (data.txt)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private bool dataLoad(string path)
+        {
+            StreamReader sr = new(path, System.Text.Encoding.UTF8);
+            string line;
+            bool dataExist = false;
+
+            if (!(sr.Peek() == -1))
+            {
+                dataExist = true;
+            }
+
+            while(sr.Peek() > -1)
+            {
+                line = sr.ReadLine();
+                
+                if(!(line == null))
+                {
+                    Global.saveData.Add(line);
+                }
+            }
+            sr.Close();
+
+            return dataExist;
+        }
 
         /// <summary>
-        /// When sub form closed
+        /// Updata previous
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void settingsClosed(object sender, EventArgs e)                                                                                 // サブフォーム終了時
+        private void previousView()
         {
-            btn.Enabled = true;
-            btn.Text = Global.msg[1];
+            prev1.Text = Global.num_previous[0].ToString();
+
+            if (Global.Numbers.Count < 74)
+            {
+                prev2.Text = Global.num_previous[1].ToString();
+            }
+
+            if (Global.Numbers.Count < 73)
+            {
+                prev3.Text = Global.num_previous[2].ToString();
+            }
+
+            if (Global.Numbers.Count < 72)
+            {
+                prev4.Text = Global.num_previous[3].ToString();
+            }
+
+            if (Global.Numbers.Count < 71)
+            {
+                prev5.Text = Global.num_previous[4].ToString();
+            }
         }
+
+        /// <summary>
+        /// Set sound player
+        /// </summary>
+        private void setSound()
+        {
+            Global.rollExists = File.Exists(Global.rollFilepath);
+            Global.hitExists = File.Exists(Global.hitFilepath);
+
+            if (Global.rollExists == true)
+            {
+                drumRoll = new System.Media.SoundPlayer(Global.rollFilepath);
+            }
+            if (Global.hitExists == true)
+            {
+                drumHit = new System.Media.SoundPlayer(Global.hitFilepath);
+            }
+        }
+
+        /// <summary>
+        /// Set save data
+        /// </summary>
+        private void setData()
+        {
+            int i, cur;
+
+            for (i = 0; i < Global.saveData.Count; i++)
+            {
+                cur = int.Parse(Global.saveData[i]);
+                colorChanger(cur);
+                Global.Numbers.Remove(cur);
+                previousChange(cur);
+            }
+
+            previousView();
+            setSound();
+
+            history.Text = Global.msg[3];
+
+            MessageBox.Show("Completed", "Load data", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
 
         /// <summary>
         /// Event >> button
@@ -439,27 +551,48 @@ namespace Bingo2
             btn.Enabled = false;
             if (btn.Text == Global.msg[0])
             {
+                btn.Enabled = true;
                 sub settings = new sub();
                 settings.Left = Left + (Width - settings.Width) / 2;
                 settings.Top = Top + (Height - settings.Height) / 2;
-                settings.Closed += new EventHandler(settingsClosed);
-                settings.Show();
+
+
+                DialogResult dr = settings.ShowDialog();
+
+                if (dr == DialogResult.Continue)
+                {
+                    if (dataLoad(Program.Global.saveDataPath))
+                    {
+                        setData();
+                        btn.Text = Global.msg[2];
+                    }
+                    else
+                    {
+                        btn.Text = Global.msg[1];
+                    }
+
+                }
+                else if (dr == DialogResult.Cancel)
+                {
+                    if (File.Exists(Program.Global.saveDataPath))
+                    {
+                        using var fileStream = new FileStream(Program.Global.saveDataPath, FileMode.Open);
+                        fileStream.SetLength(0);
+                    }
+                    btn.Text = Global.msg[1];
+                }
+                else
+                {
+                    MessageBox.Show("Please select button", "information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                settings.Dispose();
 
                 return;
             }
             else if (btn.Text == Global.msg[1])
             {
-                Global.rollExists = File.Exists(Global.rollFilepath);
-                Global.hitExists = File.Exists(Global.hitFilepath);
-
-                if (Global.rollExists == true)
-                {
-                    drumRoll = new System.Media.SoundPlayer(Global.rollFilepath);
-                }
-                if (Global.hitExists == true)
-                {
-                    drumHit = new System.Media.SoundPlayer(Global.hitFilepath);
-                }
+                setSound();
 
                 history.Text = Global.msg[3];
 
@@ -467,26 +600,9 @@ namespace Bingo2
             }
             else if (btn.Text == Global.msg[2])
             {
-                Global.num_previous[0] = Global.select;
-                prev1.Text = Global.num_previous[0].ToString();
-                if (Global.cnt < 74)
-                {
-                    prev2.Text = Global.num_previous[1].ToString();
-                }
-                if (Global.cnt < 73)
-                {
-                    prev3.Text = Global.num_previous[2].ToString();
-                }
-                if (Global.cnt < 72)
-                {
-                    prev4.Text = Global.num_previous[3].ToString();
-                }
-                if (Global.cnt < 71)
-                {
-                    prev5.Text = Global.num_previous[4].ToString();
-                }
+                previousView();
             }
-            else if (Global.cnt == 75)
+            else if (Global.Numbers.Count == 0)
             {
                 MessageBox.Show("すべての番号が出揃いました。", "通知", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Environment.Exit(0);
@@ -497,11 +613,22 @@ namespace Bingo2
                 MessageBox.Show("ERROR >> Please check Source Code...", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(1);
             }
+
             if (Global.rollExists == true)
             {
                 drumRoll.Play();
             }
             selectEffect();
+        }
+
+        /// <summary>
+        /// Whwn root form loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void root_Load(object sender, EventArgs e)
+        {
+            setBackColor();
         }
 
 
@@ -510,8 +637,7 @@ namespace Bingo2
         /// </summary>
         public root()
         {
-            InitializeComponent();                                                                                                              // デザイナーで作成したデザインを表示
-            setBackColor();                                                                                                                     // BINGOの背景色を設定
+            InitializeComponent();                                                                                                              // デザイナーで作成したデザインを表示                                                                                                                   // BINGOの背景色を設定
         }
     }
 }

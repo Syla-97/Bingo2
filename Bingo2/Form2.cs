@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Bingo2
+﻿namespace Bingo2
 {
     public partial class sub : Form
     {
@@ -43,7 +32,7 @@ namespace Bingo2
 
         private void btn1_Click(object sender, EventArgs e)
         {
-            Program.Global.code = 0;
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -53,11 +42,12 @@ namespace Bingo2
 
             if (filePath == "")
             {
-                Program.Global.code = 0;
+                DialogResult = DialogResult.Cancel;
             }
             else
             {
-                Program.Global.code = 1;
+                Program.Global.saveDataPath = filePath;
+                DialogResult = DialogResult.Continue;
             }
             Close();
         }
@@ -66,5 +56,7 @@ namespace Bingo2
         {
             InitializeComponent();
         }
+
+        
     }
 }
