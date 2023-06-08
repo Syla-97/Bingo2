@@ -8,7 +8,6 @@ namespace Bingo2
         internal static class Global
         {
             internal static List<int> Numbers = new(Enumerable.Range(1, 75));                                                                   // 選対象の数字の配列
-            //internal static int cnt = Numbers.Count;                                                                                          // Numbersのリストの要素数(LengthはArray用)
             internal static int[] num_previous = new int[5] { 0, 0, 0, 0, 0 };                                                                  // 履歴を出すための配列
             internal static int select = 0;                                                                                                     // 選んだ番号
             internal const int fastSelectTimes = 39;                                                                                            // 早く選んでる風の時の繰り返し回数
@@ -381,7 +380,7 @@ namespace Bingo2
         {
             int sel;
             int[] array = Global.Numbers.OrderBy(i => Guid.NewGuid()).ToArray();                                                                // Global.Numbers配列をランダムに入れ替える
-            Random random = new Random();                                                                                                       // 乱数生成の準備
+            Random random = new();                                                                                                       // 乱数生成の準備
 
             for (int i = 0; i < Global.fastSelectTimes; i++)                                                                                    // 早く選んでいる風の処理
             {
@@ -457,11 +456,11 @@ namespace Bingo2
                 dataExist = true;
             }
 
-            while(sr.Peek() > -1)
+            while (sr.Peek() > -1)
             {
                 line = sr.ReadLine();
-                
-                if(!(line == null))
+
+                if (!(line == null))
                 {
                     Global.saveData.Add(line);
                 }
@@ -552,7 +551,7 @@ namespace Bingo2
             if (btn.Text == Global.msg[0])
             {
                 btn.Enabled = true;
-                sub settings = new sub();
+                sub settings = new();
                 settings.Left = Left + (Width - settings.Width) / 2;
                 settings.Top = Top + (Height - settings.Height) / 2;
 

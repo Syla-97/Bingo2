@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(root));
             mainTable = new TableLayoutPanel();
             num_75 = new Label();
             num_60 = new Label();
@@ -1509,6 +1510,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1904, 961);
             Controls.Add(mainTable);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "root";
             Text = "Let's Bingo!";
             Load += root_Load;
